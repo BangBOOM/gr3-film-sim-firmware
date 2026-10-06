@@ -1,4 +1,8 @@
-# GR III Film Simulation — Experimental Firmware Research
+# GR III Film Simulation — 胶片模拟实验固件
+
+[中文](#中文) · [English](#english)
+
+## 中文
 
 理光 GR III 影像控制与胶片风格的非官方研究项目。本仓库仅提供研究说明和实验固件 Release，不提供逆向源码、原厂源码、构建环境或商业服务。
 
@@ -6,7 +10,9 @@
 
 ## 适用范围
 
-本版本仅针对本项目固定的 **RICOH GR III HDF / 官方 2.10 基础固件**制作。未验证普通 GR III、GR IIIx、其他硬件修订或其他基础版本；请勿仅凭文件名或版本号推断兼容性。相机内的版本显示仍为 `2.10`，不能用它判断是否已安装 V9。
+**仅支持 RICOH GR III（GR3）和 RICOH GR III HDF（GR3 HDF）。** 不支持 GR IIIx、GR IIIx HDF、GR IV、GR DIGITAL III 或其他机型。
+
+本包基于官方 **2.10** 固件制作，其他基础版本或第三方补丁的迁移兼容性未评估。支持范围不代表每个机型/硬件修订均有独立验收记录。相机内的版本显示仍为 `2.10`，不能用它判断是否已安装 V9。
 
 ## V9 做了什么
 
@@ -42,6 +48,44 @@ SHA256：
 
 若自行决定在上述目标设备上实验，安装文件须放在 SD 卡根目录，命名为 `fwdc239b.bin`，再通过相机固件更新入口操作。不要将解包镜像、配方或 JSON 当成升级文件。文件名正确与校验一致只证明文件身份，**不证明设备兼容或刷写安全**。
 
+## 如何使用
+
+### 1. 确认机型与准备
+
+仅支持 **RICOH GR III（GR3）和 RICOH GR III HDF（GR3 HDF）**。不支持 GR IIIx、GR IIIx HDF、GR IV、GR DIGITAL III 或其他机型。
+
+本包基于官方 **2.10** 固件制作，未评估其他基础版本或第三方补丁的迁移兼容性。先备份照片和重要设置，准备相机格式化过的 SD 卡与充满电的电池；格式化会清空卡内数据。
+
+### 2. 下载、校验与拷贝
+
+从 [V9 Release](https://github.com/BangBOOM/gr3-film-sim-firmware/releases/tag/v9-four-films-experimental) 下载 `.bin`、`SHA256SUMS.txt` 和第三方许可附件。核验 `.bin` 的 SHA256 与下方一致。macOS 可使用：
+
+```sh
+shasum -a 256 gr3-v210-four-films-menu-v9.experimental.bin
+```
+
+将 `.bin` **改名为 `fwdc239b.bin`**，放到 SD 卡**根目录**，不要放进 DCIM，不要使用 `.bin.bin` 或带编号的文件名。根目录只保留本次使用的更新包，然后安全弹出 SD 卡。
+
+```text
+SD 卡根目录 /
+├── fwdc239b.bin
+└── DCIM/
+```
+
+### 3. 更新相机
+
+相机关机后插入 SD 卡。**按住 MENU，同时开机**；在更新界面选择 **Execute / 执行**，按 OK。更新过程中不要断电、取出电池或 SD 卡。看到 **Update completed / 更新完成** 后关机，再取出更新卡。
+
+这一操作流程参考 [理光官方 GR III 更新说明](https://www.ricoh-imaging.co.jp/english/support/digital/gr3_s.html)，不表示本实验包获得官方认可。若没有出现更新界面，先复查机型、文件名、根目录和文件校验，不要尝试绕过相机检查。
+
+### 4. 选择胶片风格
+
+重新开机，在静态照片的 **影像控制 / Image Control** 菜单选择 Gold 200、800T、Ektar 100 或 Metropolis；进入对应详细调节页即可调节九项参数。白平衡、曝光与 ISO 仍由你自行设置。
+
+直出 JPEG 会应用所选风格。已有相机 DNG 可在回放菜单的 **RAW 显影 / RAW Development** 中选择上述影像控制并输出 JPEG；拍 RAW 时，不应把预览风格当作原始传感器数据被永久改写。
+
+先确认菜单滚动、四款切换、拍摄、RAW 显影和参数重启保存正常。相机版本显示仍为 **2.10**；应通过新增菜单项识别 V9。更新后删除卡上的 `fwdc239b.bin`，避免误用旧包；若格式化卡，请先备份照片。降级/恢复兼容性未保证，本项目不承诺回滚或救砖服务。
+
 ## 验证范围与已知限制
 
 V9 已完成七套最终 ROM 的离线检查（色彩后端、存储、菜单、RAW、RAW UI、图标、文本），以及两个独立解码器的一致性复核、补丁范围与容器校验。部分测试使用服务、文件系统或硬件替身。
@@ -70,3 +114,75 @@ Gold 色彩数据的研究来源包含 **spektrafilm** 的 `kodak_gold_200` prof
 BangBOOM / 本研究项目对其色彩数据进行了烘焙、拟合、机内矩阵/曲线适配及固件集成，属于修改后的研究实现。V9 保留此前 Gold 数值数据并调整存储编码及集成路径。Release 附带 `third-party-notices-v9.zip`，包含所保留的来源说明、原样许可及本次修改记录；其许可范围不因此扩展到原厂固件或其他独立作品。
 
 胶片与相机名称仅用于描述研究对象和风格方向，商标归各自权利人所有。
+
+---
+
+## English
+
+### About and supported cameras
+
+An unofficial research project exploring GR III Image Control and film-inspired colour. This repository contains only this README; experimental firmware and supporting notices are distributed through [Releases](https://github.com/BangBOOM/gr3-film-sim-firmware/releases).
+
+**Supported models only: RICOH GR III and RICOH GR III HDF.** GR IIIx, GR IIIx HDF, GR IV, GR DIGITAL III and other models are not supported. V9 is based on the official **2.10** firmware; migration from other base versions or third-party patches has not been evaluated.
+
+The author reported successful on-camera verification on **2026-10-07**. No per-model test matrix, detailed test log or long-term run record has been published. This remains an experimental prerelease, not an official update or a comprehensive stability certification.
+
+### What V9 changes
+
+| Added Image Control | Intended look | Icon |
+| --- | --- | --- |
+| Gold 200 | Warm, nostalgic everyday colour | G200 |
+| Tungsten 800 / 800T | Tungsten/night scenes and cool–warm contrast | T800 |
+| Ektar 100 | Vivid outdoor colour | E100 |
+| Metropolis | Muted, cool-grey urban colour | MTRO |
+
+These are digital recipes inspired by film, not guaranteed reproductions of physical film. The E100 icon refers to **Ektar 100**, not Ektachrome E100.
+
+- Four independent menu entries, each with nine adjustments from −4 to +4: saturation, hue, high/low key, contrast, highlight contrast, shadow contrast, sharpness, shading and clarity.
+- Integrated into in-camera RAW development and separate parameter storage/save/restore paths.
+- Still-menu order: Nega → Posi → Gold → 800T → Ektar → Metropolis → Standard → Vivid → Monotone → Soft Monotone → Hard Monotone → Hi-Contrast B&W → Bleach Bypass → Retro → HDR → Cross Processing → Custom 1 → Custom 2. RAW Original appears first when available.
+- Preserves earlier Gold/800T numerical colour data and uses compact icons.
+- Migrates this project's V7 Gold and V8 Gold/800T records. Arbitrary style rebinding, other patches and downgrade compatibility are not guaranteed.
+- Leaves the factory Movie path in place. No added grain or halation; selecting a style does not change WB or ISO automatically.
+
+### How to use
+
+1. **Prepare.** Confirm that the camera is a GR III or GR III HDF. Back up photos and important settings. Prepare a camera-formatted SD card and a fully charged battery. Formatting erases the card.
+2. **Download and verify.** Download `gr3-v210-four-films-menu-v9.experimental.bin`, `SHA256SUMS.txt` and the third-party notices from the [V9 Release](https://github.com/BangBOOM/gr3-film-sim-firmware/releases/tag/v9-four-films-experimental). The firmware is **30,410,436 bytes**, with SHA256:
+
+   ```text
+   2088b800d09d03b3ee270fb2526416368bfb5b87f67e090e3a95d55b9d4d88c5
+   ```
+
+   On macOS, run `shasum -a 256 gr3-v210-four-films-menu-v9.experimental.bin` and compare the result.
+3. **Copy.** Rename the firmware to **`fwdc239b.bin`** and place it in the SD card **root**, outside DCIM. Avoid duplicate extensions or numbered filenames. Keep only the intended update package in the root, then safely eject the card.
+4. **Update.** With the camera off, insert the card. Hold **MENU while powering on**, select **Execute**, and press **OK**. Do not interrupt power or remove the battery/card. Once **Update completed** appears, turn the camera off and remove the update card. See [Ricoh's official update procedure](https://www.ricoh-imaging.co.jp/english/support/digital/gr3_s.html); this reference does not imply endorsement of this experimental package. If no update screen appears, recheck the model, filename, location and checksum rather than bypassing camera checks.
+5. **Use a style.** Open the still-photo **Image Control** menu and select Gold 200, 800T, Ektar 100 or Metropolis. Use its detail page for the nine adjustments; set exposure, WB and ISO yourself. Camera JPEGs apply the selected look. Existing camera DNGs can be processed through playback **RAW Development** with the new styles to produce JPEGs. A RAW preview look does not mean the original sensor data has been permanently recoloured.
+6. **Check and clean up.** Check menu scrolling, style switching, capture, RAW development and settings retention after restart. The firmware version display remains **2.10**; identify V9 by the added menu entries. Delete `fwdc239b.bin` from the card afterward. Back up photos before any formatting. Downgrade/recovery compatibility and unbricking assistance are not promised.
+
+A matching filename or checksum identifies a file; it does not prove hardware safety or compatibility.
+
+### Validation and limitations
+
+Seven final-ROM offline checks passed: colour backend, storage, menu, RAW, RAW UI, icons and text. Two independent decoders agreed, and container/checksum and patch-boundary checks passed. Some tests use service, filesystem or hardware substitutes.
+
+The author's successful camera feedback does not establish coverage of every device or feature. Full hardware behaviour, asynchronous scheduling, real filesystem behaviour, stack/memory margins, power consumption and long-term stability have not been comprehensively evaluated. Exact colour accuracy is not certified.
+
+V9 does not load arbitrary `.cube` LUTs from SD or provide unlimited slots. Four style identities are fixed. Complete numeric custom-control text import/export is not implemented. Private ImageTone identifiers may be unrecognised by third-party photo software.
+
+### Research-only disclaimer
+
+1. **Purpose and affiliation.** This project is for learning, experimentation and research into firmware and digital colour. It is not an official firmware, consumer product, repair tool or solution for critical work. The author is not affiliated with, authorised by, sponsored by or endorsed by RICOH/PENTAX, Kodak, CineStill, Lomography or other referenced brands.
+2. **No warranties.** Documentation, recipes and binaries are provided **“as is” and “as available”**. To the extent permitted by applicable law, no express or implied warranties are provided, including safety, stability, accuracy, merchantability, fitness for a particular purpose, compatibility or non-infringement.
+3. **Your decision and risk.** Downloading, modifying, flashing, downgrading or using experimental firmware is your own decision and risk. Possible consequences include failure to boot, freezes, malfunctions, lost settings/photos, corrupted storage, hardware damage, repair costs and warranty implications. Recovery, rollback and official repair are not guaranteed.
+4. **Limitation of liability.** To the maximum extent permitted by applicable law, authors, contributors and distributors accept no liability for direct, indirect, incidental, special or consequential losses arising from this project or its use, including device, data, income, business or time losses. Liability that cannot legally be excluded remains governed by applicable law. This disclaimer does not override third-party licences or waive non-waivable rights.
+5. **No service commitment.** No obligation is undertaken to provide flashing assistance, adaptations, support, repairs, data recovery, compensation, updates, maintenance or response deadlines. The project may change or stop being maintained.
+6. **Rights and licences.** Research use does not itself grant rights to use or redistribute manufacturer firmware, third-party works, patents or trademarks. Rights remain with their respective owners; users must check applicable laws and licences. No blanket MIT, CC BY-SA or other open-source licence is granted to the complete firmware. Preserve applicable attribution and licence notices when downloading or redistributing.
+
+### Third-party attribution
+
+Gold colour research includes a modified derivative of the **spektrafilm `kodak_gold_200` profile by Andrea Volpato**: <https://github.com/andreavolpato/spektrafilm>. The profile and its direct colour-data derivatives are **CC BY-SA 4.0**; see the [upstream licence](https://github.com/andreavolpato/spektrafilm/blob/main/SPEKTRAFILM_LICENSE.txt).
+
+BangBOOM / this research project baked, fitted and adapted colour data to camera matrices/curves and integrated it into the firmware. V9 preserves earlier Gold numerical data while changing storage encoding and integration. The Release includes `third-party-notices-v9.zip` with retained provenance, the unchanged licence and a modification log. That licence does not thereby extend to manufacturer firmware or other independent works.
+
+Camera and film names describe research targets and intended looks. Trademarks belong to their respective owners.
